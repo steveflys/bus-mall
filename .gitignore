@@ -1,4 +1,11 @@
-######################
-## EPiServer Files
-######################
-*License.config
+```sh
+ # Mac OS files
+ .DS_Store
+ 
+ # Logs
+ logs
+ *.log
+ 
+ # Optional eslint cache
+ .eslintcache
+ ```
