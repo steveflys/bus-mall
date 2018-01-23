@@ -2,14 +2,18 @@
 
 // array to store all product instances
 Product.allProducts = [];
-var imagesPicked = [];
-var imagesDisplayed = [];
 var events = 0;
+var productVotes = [];
+//array to store product names
+var names =[];
 // make a constructor for product objects
 function Product(filepath, name){
   this.filepath = filepath;
   this.name = name;
+  this.Displayed = 0;
+  this.Picked = 0;
   Product.allProducts.push(this);
+  names.push(this.name);
 }
 // create instances of products
 new Product('img/bag.jpg', 'Bag');
@@ -23,7 +27,7 @@ new Product('img/cthulhu.jpg', 'cthulhu');
 new Product('img/dog-duck.jpg', 'Dog-Duck');
 new Product('img/dragon.jpg', 'Dragon');
 new Product('img/pen.jpg', 'Pen');
-new Product('img/pet-sweep.jpg', 'Ret-Sweep');
+new Product('img/pet-sweep.jpg', 'Pet-Sweep');
 new Product('img/scissors.jpg', 'Scissors');
 new Product('img/shark.jpg', 'Shark');
 new Product('img/sweep.png', 'Sweep');
@@ -47,22 +51,30 @@ imgEl3.addEventListener('click', pickImg3);
 function pickImg1() {
   randomProduct();
   events = events + 1;
-  imagesPicked.push(currentProducts[0]);
+  Product.allProducts[currentProducts[0]].Picked ++;
 }
 
 function pickImg2() {
   randomProduct();
   events = events + 1;
-  imagesPicked.push(currentProducts[1]);
+  Product.allProducts[currentProducts[1]].Picked ++;
 }
 
 function pickImg3() {
   randomProduct();
   events = events + 1;
-  imagesPicked.push(currentProducts[2]);
+  Product.allProducts[currentProducts[2]].Picked ++;
 }
 
-var currentProducts = [];
+function showResults () {
+  for(var i in Product.allProducts) {
+    var liEl = document.createElement(li);
+    liEl.textContent = Product.allProducts[i].name + ' was shown ' + Product.allProducts[i].Displayed + ' and was picked ' + Product.allProducts[i].Picked;
+  }
+}
+
+
+var currentProducts = [1, 2, 3];
 var newProducts = [];
 
 var randomIndex;
@@ -71,29 +83,56 @@ function randomIndexGen() {
   randomIndex = Math.floor(Math.random() * Product.allProducts.length);
 }
 
+//function to render chart
+
+function renderChart() {
+  var context = document.getElementById('chart').msGetInputContext('2d');
+
+  var chartColors = [];
+
+  var productChart = new Chart(content, {
+    type: 'bar',
+    data: {
+      labels: names,
+      datasets: [{
+        label: 'votes per Product',
+        data: productVotes,
+        backgroundColors: chartColors,
+      }]
+    }
+
+  })
+}
+
+var updateVotes = function() {
+
+}
 // callback function for the evemntb listner to randomly display a product image
 function randomProduct(){
 
   if(events === 25) {
     alert('You have made 25 selections.  Thank you for your time.  Please tell the monitor you are finished and collect your $20.00');
-          
+
     imgEl1.removeEventListener('click', pickImg1);
     imgEl2.removeEventListener('click', pickImg2);
-    imgEl3.removeEventListener('click', pickImg3); 
+    imgEl3.removeEventListener('click', pickImg3);
+
+    showResults();
+    updateVotes();
+    renderChart();
   }
   //create arrays to set the current and new products
   //random # generator to return a number location between 0 and the length of the array (Product.allProducts)
-  
+
   //ensure the new number does not match any of the current numbers
-  for(var i = 0; i < 3; i++) {
-    do { randomIndexGen(); 
+  for(var i in currentProducts) {
+    do { randomIndexGen();
     } while (currentProducts.includes(randomIndex) === true || newProducts.includes(randomIndex) === true);
     newProducts[i] = randomIndex;
-  }  
+    Product.allProducts[randomIndex].Displayed ++;
+  }
 
   currentProducts = newProducts;
-
-  imagesDisplayed.push(newProducts);
 
   //use the random number generator to display a product at that random index
   imgEl1.src = Product.allProducts[currentProducts[0]].filepath;
