@@ -3,18 +3,20 @@
 // array to store all product instances
 Product.allProducts = [];
 var events = 0;
-var productVotes = [];
+//get the ul to display the results ststements
+var ulEl = document.getElementById('results');
 //array to store product names
-var names =[];
+var names = [];
 // make a constructor for product objects
 function Product(filepath, name){
   this.filepath = filepath;
   this.name = name;
-  this.Displayed = 0;
-  this.Picked = 0;
+  this.displayed = 0;
+  this.picked = 0;
   Product.allProducts.push(this);
   names.push(this.name);
 }
+
 // create instances of products
 new Product('img/bag.jpg', 'Bag');
 new Product('img/banana.jpg', 'Banang');
@@ -22,8 +24,8 @@ new Product('img/bathroom.jpg', 'Bathroom');
 new Product('img/boots.jpg', 'Boots');
 new Product('img/breakfast.jpg', 'Breakfast');
 new Product('img/bubblegum.jpg', 'Bubblegum');
-new Product('img/chair.jpg', 'chair');
-new Product('img/cthulhu.jpg', 'cthulhu');
+new Product('img/chair.jpg', 'Chair');
+new Product('img/cthulhu.jpg', 'Cthulhu');
 new Product('img/dog-duck.jpg', 'Dog-Duck');
 new Product('img/dragon.jpg', 'Dragon');
 new Product('img/pen.jpg', 'Pen');
@@ -51,25 +53,26 @@ imgEl3.addEventListener('click', pickImg3);
 function pickImg1() {
   randomProduct();
   events = events + 1;
-  Product.allProducts[currentProducts[0]].Picked ++;
+  Product.allProducts[currentProducts[0]].picked ++;
 }
 
 function pickImg2() {
   randomProduct();
   events = events + 1;
-  Product.allProducts[currentProducts[1]].Picked ++;
+  Product.allProducts[currentProducts[1]].picked ++;
 }
 
 function pickImg3() {
   randomProduct();
   events = events + 1;
-  Product.allProducts[currentProducts[2]].Picked ++;
+  Product.allProducts[currentProducts[2]].picked ++;
 }
 
 function showResults () {
   for(var i in Product.allProducts) {
-    var liEl = document.createElement(li);
-    liEl.textContent = Product.allProducts[i].name + ' was shown ' + Product.allProducts[i].Displayed + ' and was picked ' + Product.allProducts[i].Picked;
+    var liEl = document.createElement('li');
+    liEl.textContent = Product.allProducts[i].name + ' was shown ' + Product.allProducts[i].displayed + ' times, and was picked ' + Product.allProducts[i].picked;
+    ulEl.appendChild(liEl);
   }
 }
 
@@ -85,24 +88,24 @@ function randomIndexGen() {
 
 //function to render chart
 
-function renderChart() {
-  var context = document.getElementById('chart').msGetInputContext('2d');
+// function renderChart() {
+//   var context = document.getElementById('chart').msGetInputContext('2d');
 
-  var chartColors = [];
+//   var chartColors = [];
 
-  var productChart = new Chart(content, {
-    type: 'bar',
-    data: {
-      labels: names,
-      datasets: [{
-        label: 'votes per Product',
-        data: productVotes,
-        backgroundColors: chartColors,
-      }]
-    }
+//   var productChart = new Chart(content, {
+//     type: 'bar',
+//     data: {
+//       labels: names,
+//       datasets: [{
+//         label: 'votes per Product',
+//         data: productVotes,
+//         backgroundColors: chartColors,
+//       }]
+//     }
 
-  })
-}
+//   })
+// }
 
 var updateVotes = function() {
 
@@ -119,7 +122,7 @@ function randomProduct(){
 
     showResults();
     updateVotes();
-    renderChart();
+    // renderChart();
   }
   //create arrays to set the current and new products
   //random # generator to return a number location between 0 and the length of the array (Product.allProducts)
@@ -129,7 +132,7 @@ function randomProduct(){
     do { randomIndexGen();
     } while (currentProducts.includes(randomIndex) === true || newProducts.includes(randomIndex) === true);
     newProducts[i] = randomIndex;
-    Product.allProducts[randomIndex].Displayed ++;
+    Product.allProducts[randomIndex].displayed ++;
   }
 
   currentProducts = newProducts;
