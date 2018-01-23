@@ -3,6 +3,7 @@
 // array to store all product instances
 Product.allProducts = [];
 var imagesPicked = [];
+var events = 0;
 // make a constructor for product objects
 function Product(filepath, name){
   this.filepath = filepath;
@@ -44,19 +45,19 @@ imgEl3.addEventListener('click', pickImg3);
 
 function pickImg1() {
   randomProduct();
-  events = events++;
+  events = events + 1;
   imagesPicked.push(currentProducts[0]);
 }
 
 function pickImg2() {
   randomProduct();
-  events = events++;
+  events = events + 1;
   imagesPicked.push(currentProducts[1]);
 }
 
 function pickImg3() {
   randomProduct();
-  events = events++;
+  events = events + 1;
   imagesPicked.push(currentProducts[2]);
 }
 
@@ -65,12 +66,6 @@ var newProducts = [];
 
 var randomIndex;
 
-var events = (0);
-
-if (events === 25) {
-  alert('You have made 25 selections.  Thamnk you for your time.  Please tell the monitor you are finished and collect your $20.00');
-}
-
 function randomIndexGen() {
   randomIndex = Math.floor(Math.random() * Product.allProducts.length);
 }
@@ -78,6 +73,13 @@ function randomIndexGen() {
 // callback function for the evemntb listner to randomly display a product image
 function randomProduct(){
 
+  if(events === 25) {
+    alert('You have made 25 selections.  Thank you for your time.  Please tell the monitor you are finished and collect your $20.00');
+          
+    imgEl1.removeEventListener('click', pickImg1);
+    imgEl2.removeEventListener('click', pickImg2);
+    imgEl3.removeEventListener('click', pickImg3); 
+  }
   //create arrays to set the current and new products
   //random # generator to return a number location between 0 and the length of the array (Product.allProducts)
   
