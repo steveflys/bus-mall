@@ -3,6 +3,7 @@
 // array to store all product instances
 Product.allProducts = [];
 var imagesPicked = [];
+var imagesDisplayed = [];
 var events = 0;
 // make a constructor for product objects
 function Product(filepath, name){
@@ -91,6 +92,8 @@ function randomProduct(){
   }  
 
   currentProducts = newProducts;
+
+  imagesDisplayed.push(newProducts);
 
   //use the random number generator to display a product at that random index
   imgEl1.src = Product.allProducts[currentProducts[0]].filepath;
