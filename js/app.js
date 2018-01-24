@@ -2,15 +2,17 @@
 
 // array to store all product instances
 Product.allProducts = [];
+//creat a var to hold the vote events
 var events = 0;
-//get the ul to display the results ststements
+//get the ul to display the results statements
 var ulEl = document.getElementById('results');
+
 //arrays to store product names and votes
 var productNames = [];
 
 var productVotes = [];
 
-// make a constructor for product objects
+// make a constructor for product objects and fill the Product.allProducts array and productNames array.
 function Product(filepath, name){
   this.filepath = filepath;
   this.name = name;
@@ -48,7 +50,7 @@ var imgEl1 = document.getElementById('image-1');
 var imgEl2 = document.getElementById('image-2');
 var imgEl3 = document.getElementById('image-3');
 
-// event listner on the image
+// event listner on the each image seperatly
 imgEl1.addEventListener('click', pickImg1);
 imgEl2.addEventListener('click', pickImg2);
 imgEl3.addEventListener('click', pickImg3);
@@ -85,13 +87,45 @@ var updateVotes = function() {
   }
 };
 
+//create arrays to set the current and new products
 var currentProducts = [1, 2, 3];
 var newProducts = [];
-
+//create a variable to store the random number the create a random # generator to return a number location between 0 and the length of the array (Product.allProducts) and assign that number to the var randomIndex.
 var randomIndex;
 
 function randomIndexGen() {
   randomIndex = Math.floor(Math.random() * Product.allProducts.length);
+}
+
+// callback function for the evemntb listner to randomly display a product image
+function randomProduct(){
+
+  if(events === 25) {
+    alert('You have made 25 selections.  Thank you for your time.  We appreciate your participation in this study.  We value your opinions and inputs. Please tell the monitor you are finished.');
+
+    imgEl1.removeEventListener('click', pickImg1);
+    imgEl2.removeEventListener('click', pickImg2);
+    imgEl3.removeEventListener('click', pickImg3);
+
+    showResults();
+    updateVotes();
+    renderChart();
+  }
+  
+  //create a new set of 3 images and ensure the new images do not match any of the current numbers and each are different from each other
+  for(var i in currentProducts) {
+    do { randomIndexGen();
+    } while (currentProducts.includes(randomIndex) === true || newProducts.includes(randomIndex) === true);
+    newProducts[i] = randomIndex;
+    Product.allProducts[randomIndex].displayed ++;
+  }
+
+  currentProducts = newProducts;
+
+  //use the random number generator to display a product at that random index
+  imgEl1.src = Product.allProducts[currentProducts[0]].filepath;
+  imgEl2.src = Product.allProducts[currentProducts[1]].filepath;
+  imgEl3.src = Product.allProducts[currentProducts[2]].filepath;
 }
 
 //function to render chart
@@ -121,39 +155,6 @@ function renderChart(){
       }
     }
   });
-}
-
-// callback function for the evemntb listner to randomly display a product image
-function randomProduct(){
-
-  if(events === 25) {
-    alert('You have made 25 selections.  Thank you for your time.  Please tell the monitor you are finished and collect your $20.00');
-
-    imgEl1.removeEventListener('click', pickImg1);
-    imgEl2.removeEventListener('click', pickImg2);
-    imgEl3.removeEventListener('click', pickImg3);
-
-    showResults();
-    updateVotes();
-    renderChart();
-  }
-  //create arrays to set the current and new products
-  //random # generator to return a number location between 0 and the length of the array (Product.allProducts)
-
-  //ensure the new number does not match any of the current numbers
-  for(var i in currentProducts) {
-    do { randomIndexGen();
-    } while (currentProducts.includes(randomIndex) === true || newProducts.includes(randomIndex) === true);
-    newProducts[i] = randomIndex;
-    Product.allProducts[randomIndex].displayed ++;
-  }
-
-  currentProducts = newProducts;
-
-  //use the random number generator to display a product at that random index
-  imgEl1.src = Product.allProducts[currentProducts[0]].filepath;
-  imgEl2.src = Product.allProducts[currentProducts[1]].filepath;
-  imgEl3.src = Product.allProducts[currentProducts[2]].filepath;
 }
 // invoke the callback on page load to show a random product
 randomProduct();
