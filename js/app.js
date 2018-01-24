@@ -5,16 +5,19 @@ Product.allProducts = [];
 var events = 0;
 //get the ul to display the results ststements
 var ulEl = document.getElementById('results');
-//array to store product names
-var names = [];
+//arrays to store product names and votes
+var productNames = [];
+
+var productVotes = [];
+
 // make a constructor for product objects
 function Product(filepath, name){
   this.filepath = filepath;
   this.name = name;
   this.displayed = 0;
-  this.picked = 0;
+  this.votes = 0;
   Product.allProducts.push(this);
-  names.push(this.name);
+  productNames.push(this.name);
 }
 
 // create instances of products
@@ -53,29 +56,34 @@ imgEl3.addEventListener('click', pickImg3);
 function pickImg1() {
   randomProduct();
   events = events + 1;
-  Product.allProducts[currentProducts[0]].picked ++;
+  Product.allProducts[currentProducts[0]].votes ++;
 }
 
 function pickImg2() {
   randomProduct();
   events = events + 1;
-  Product.allProducts[currentProducts[1]].picked ++;
+  Product.allProducts[currentProducts[1]].votes ++;
 }
 
 function pickImg3() {
   randomProduct();
   events = events + 1;
-  Product.allProducts[currentProducts[2]].picked ++;
+  Product.allProducts[currentProducts[2]].votes ++;
 }
 
 function showResults () {
   for(var i in Product.allProducts) {
     var liEl = document.createElement('li');
-    liEl.textContent = Product.allProducts[i].name + ' was shown ' + Product.allProducts[i].displayed + ' times, and was picked ' + Product.allProducts[i].picked;
+    liEl.textContent = Product.allProducts[i].name + ' was shown ' + Product.allProducts[i].displayed + ' times, and was picked ' + Product.allProducts[i].votes;
     ulEl.appendChild(liEl);
   }
 }
 
+var updateVotes = function() {
+  for(var i in Product.allProducts){
+    productVotes[i] = Product.allProducts[i].votes;
+  }
+};
 
 var currentProducts = [1, 2, 3];
 var newProducts = [];
@@ -88,28 +96,33 @@ function randomIndexGen() {
 
 //function to render chart
 
-// function renderChart() {
-//   var context = document.getElementById('chart').msGetInputContext('2d');
+function renderChart(){
+  var ctx = document.getElementById('resultsChart').getContext('2d');
 
-//   var chartColors = [];
+  var chartColors = ['#f70404', '#f73504', '#f76904', '#79a04', '#f7ee04', '#eff704', '#bef704', '#8af704', '#59f704', '#29f704', '#04f70d', '#04f73d', '#04f76d', '#04f79e', '#04f7d2', '#04ebf7', '#04baf7', '#0486f7', '#0455f7', '#0425f7'];
 
-//   var productChart = new Chart(content, {
-//     type: 'bar',
-//     data: {
-//       labels: names,
-//       datasets: [{
-//         label: 'votes per Product',
-//         data: productVotes,
-//         backgroundColors: chartColors,
-//       }]
-//     }
-
-//   })
-// }
-
-var updateVotes = function() {
-
+  var resultsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [{
+        label: 'Votes per Product',
+        data: productVotes,
+        backgroundColor: chartColors,
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero:true
+          }
+        }]
+      }
+    }
+  });
 }
+
 // callback function for the evemntb listner to randomly display a product image
 function randomProduct(){
 
@@ -122,7 +135,7 @@ function randomProduct(){
 
     showResults();
     updateVotes();
-    // renderChart();
+    renderChart();
   }
   //create arrays to set the current and new products
   //random # generator to return a number location between 0 and the length of the array (Product.allProducts)
