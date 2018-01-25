@@ -22,16 +22,19 @@ function Product(filepath, name){
   productNames.push(this.name);
 }
 
+if (localStorage.products) {
+  Product.allProoducts = JSON.parse(localStorage.products);
+} else{
 // create instances of products
 new Product('img/bag.jpg', 'Bag');
 new Product('img/banana.jpg', 'Banang');
-new Product('img/bathroom.jpg', 'Bathroom');
+new Product('img/bathroom.png', 'Bathroom');
 new Product('img/boots.jpg', 'Boots');
 new Product('img/breakfast.jpg', 'Breakfast');
 new Product('img/bubblegum.jpg', 'Bubblegum');
-new Product('img/chair.jpg', 'Chair');
+new Product('img/chair.png', 'Chair');
 new Product('img/cthulhu.jpg', 'Cthulhu');
-new Product('img/dog-duck.jpg', 'Dog-Duck');
+new Product('img/dog-duck.png', 'Dog-Duck');
 new Product('img/dragon.jpg', 'Dragon');
 new Product('img/pen.jpg', 'Pen');
 new Product('img/pet-sweep.jpg', 'Pet-Sweep');
@@ -43,7 +46,7 @@ new Product('img/unicorn.jpg', 'Unicorn');
 new Product('img/usb.gif', 'Usb');
 new Product('img/water-can.jpg', 'Water Can');
 new Product('img/wine-glass.jpg', 'Wine Glass');
-
+}
 // access the images from the DOM
 
 var imgEl1 = document.getElementById('image-1');
@@ -87,6 +90,15 @@ var updateVotes = function() {
   }
 };
 
+var tallyTotalVotes = function() {
+  var retrievedData = localStorage.getItem('votingRecord');
+  var storedVotes = JSON.parse(retrievedData);
+  console.log(storedVotes);
+  for (var i in Product.allProducts) {
+    totalVoteCount[i] = storedVotes[i] + productVotes[i]; 
+  }
+};
+
 //create arrays to set the current and new products
 var currentProducts = [1, 2, 3];
 var newProducts = [];
@@ -101,15 +113,18 @@ function randomIndexGen() {
 function randomProduct(){
 
   if(events === 25) {
-    alert('You have made 25 selections.  Thank you for your time.  We appreciate your participation in this study.  We value your opinions and inputs. Please tell the monitor you are finished.');
+    alert('You have made 25 selections.  Thank you for your time.  We appreciate your participation in this study. Please tell the monitor you are finished.');
 
     imgEl1.removeEventListener('click', pickImg1);
     imgEl2.removeEventListener('click', pickImg2);
     imgEl3.removeEventListener('click', pickImg3);
 
-    showResults();
+    localStorage.products=JSON.stringify(Product.allProducts);
     updateVotes();
+    tallyTotalVotes();
+    showResults();
     renderChart();
+    localStorage.setItem('votingRecord', JSON.stringify(totalVoteCount));
   }
   
   //create a new set of 3 images and ensure the new images do not match any of the current numbers and each are different from each other
