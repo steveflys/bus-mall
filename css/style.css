@@ -8,14 +8,22 @@ body {
 
 h1 {
     font-size: 200%;
-    margin: 50px;
+    margin: 30px;
     color: blue;
     text-align: center;
-    width: 90%;
 }
 
 p {
     margin: 20px;
+}
+
+div {
+    background-color: rgb(110, 37, 37);
+}
+
+div p {
+    font-size: 1.2em;
+    color: white;
 }
 
 ul {
@@ -23,7 +31,7 @@ ul {
     font-size: 1em;
     background-color: rgb(110, 37, 37);
     color: rgb(236, 224, 155);
-    margin: 30px;
+    margin: 20px;
     padding: 10px;
     columns: 2;
 }

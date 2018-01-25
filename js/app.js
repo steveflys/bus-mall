@@ -88,6 +88,8 @@ function pickImg3() {
 
 function showResults () {
   for(var i in Product.allProducts) {
+    var votesRounds = document.getElementById('rounds-and-votes');
+    votesRounds.innerHTML = 'Your results so far:  ROUNDS = ' + Product.allProducts[0].round + ' --- VOTES = ' + Product.allProducts[0].round * 25;
     var liEl = document.createElement('li');
     liEl.textContent = Product.allProducts[i].name + ' was shown ' + Product.allProducts[i].displayed + ' times, and was picked ' + Product.allProducts[i].votes;
     ulEl.appendChild(liEl);
